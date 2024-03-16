@@ -119,6 +119,10 @@ public class Item : MonoBehaviour
 
     private IEnumerator FreezeCall()
     {
+        if (gameObject.layer == LayerMask.NameToLayer("Frozen"))
+        {
+            yield return null;
+        }
         yield return new WaitForSeconds(0.1f);
 
         Freeze();

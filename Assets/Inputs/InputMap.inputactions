@@ -60,7 +60,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Unfreeze",
+                    "name": "ToggleFreeze",
                     "type": "Button",
                     "id": "fde02714-629e-491b-93cd-b968c24d77aa",
                     "expectedControlType": "Button",
@@ -242,7 +242,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Unfreeze",
+                    "action": "ToggleFreeze",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -253,7 +253,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Unfreeze",
+                    "action": "ToggleFreeze",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

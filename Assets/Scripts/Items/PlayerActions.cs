@@ -195,7 +195,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-            GameMaster.Instance.ResumeLayer(0);
+            GameMaster.Instance.ToogleLayer(0);
         }
     }
 }
