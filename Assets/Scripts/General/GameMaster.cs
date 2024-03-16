@@ -70,6 +70,20 @@ public class GameMaster : MonoBehaviour
         foreach (Item obj in layer) obj.Freeze();
     }
 
+    public void ToogleLayer(int Layer)
+    {
+        List<Item> layer = GetLayer(Layer);
+        if (layer.Count == 0) return;
+        if (layer[0].gameObject.layer == LayerMask.NameToLayer("Frozen"))
+        {
+            ResumeLayer(Layer);
+        }
+        else
+        {
+            FreezeLayer(Layer);
+        }
+    }
+
     public void StartGame()
     {
         StartCoroutine(StartSequence());
