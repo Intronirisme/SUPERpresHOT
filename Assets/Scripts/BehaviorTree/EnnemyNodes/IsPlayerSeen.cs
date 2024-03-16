@@ -7,16 +7,17 @@ public class IsPlayerSeen : BTNode
     private Transform _transform;
     private RaycastHit hit;
 
-    public IsPlayerSeen(Transform transform)
+    public IsPlayerSeen(Transform transform, ref Dictionary<string, object> data)
     {
         _transform = transform;
+        _dataContext = data;
     }
 
     public override NodeState Evaluate()
     {
         GameObject player = (GameObject)GetData("player");
         
-        Collider[] colliders = Physics.OverlapSphere(_transform.position, 2f);
+        Collider[] colliders = Physics.OverlapSphere(_transform.position, 5f);
 
         foreach(Collider collider in colliders)
         {

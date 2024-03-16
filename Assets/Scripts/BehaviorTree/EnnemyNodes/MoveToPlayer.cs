@@ -7,9 +7,10 @@ public class MoveToPlayer : BTNode
 {
     private Transform _transform;
 
-    public MoveToPlayer(Transform transform)
+    public MoveToPlayer(Transform transform, ref Dictionary<string, object> data)
     {
         _transform = transform;
+        _dataContext = data;
     }
     public override NodeState Evaluate()
     {
