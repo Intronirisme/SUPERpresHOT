@@ -18,6 +18,8 @@ public class EnnemyBT : MonoBehaviour
 
         _blackBoard["transform"] = transform;
         _blackBoard["player"] = GameObject.FindWithTag("Player");
+
+        _blackBoard["isFrozen"] = false;
         
         ConstructTree();
     }
@@ -31,17 +33,11 @@ public class EnnemyBT : MonoBehaviour
                 // HasEnter
                 // Enter
             }),
-
-            new Sequence(new List<BTNode> { // Time stop handling part
-                // IsTimeStoped
-                // Frozen
-            }),
-
-            new Sequence(new List<BTNode> { // Death Handling part
-                // IsDead
-                // Die
-            }),
             */
+            new Sequence(new List<BTNode> { // Time stop handling part
+                new IsTimeFrozen(transform, ref _blackBoard)
+            }),
+            
 
             new Sequence(new List<BTNode> { // Attack player part
                 new IsPlayerInAttackRange(transform, ref _blackBoard),
