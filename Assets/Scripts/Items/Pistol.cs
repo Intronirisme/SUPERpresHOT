@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Pistol : Item
 {
-    private void Awake()
+    public override void Init()
     {
         PlayerCanThrow = true;
         PlayerCanUse = true;

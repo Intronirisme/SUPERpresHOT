@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ProjectileTypes
 {
@@ -26,6 +27,20 @@ public class Item : MonoBehaviour
     private bool _isHeld = false;
 
     private float _remainingSnap;
+    private LayerMask _mask;
+
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        Debug.Log("Awake");
+        _rb = GetComponent<Rigidbody>();
+        _mask = LayerMask.NameToLayer("Frozen");
+
+        Init();
+    }
+
+    public virtual void Init() { }
 
     void Update()
     {
@@ -42,6 +57,10 @@ public class Item : MonoBehaviour
         transform.parent = AttachPoint.transform;
         _isHeld = true;
         _remainingSnap = SnapDuration;
+
+        _rb.isKinematic = true;
+
+        gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
 
     public void Drop()
@@ -49,6 +68,10 @@ public class Item : MonoBehaviour
         _isHeld = false;
         transform.parent = null;
         _remainingSnap = 0;
+
+        _rb.isKinematic = false;
+
+        gameObject.layer = LayerMask.NameToLayer("Item");
     }
 
     public void Use()
