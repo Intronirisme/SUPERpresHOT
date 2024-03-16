@@ -79,9 +79,16 @@ public class Item : MonoBehaviour
 
     }
 
-    public void Throw()
+    public void Throw(Vector3 velocity)
     {
+        _isHeld = false;
+        transform.parent = null;
+        _remainingSnap = 0;
 
+        _rb.isKinematic = false;
+        gameObject.layer = LayerMask.NameToLayer("Item");
+
+        _rb.velocity = velocity;
     }
 
     public void Freeze()

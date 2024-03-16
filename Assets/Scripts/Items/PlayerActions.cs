@@ -150,7 +150,8 @@ public class PlayerActions : MonoBehaviour
     {
         if (_itemInHand != null)
         {
-            _itemInHand.Throw();
+            Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
+            _itemInHand.Throw(startVelocity);
 
             _itemInHand = null;
         }
