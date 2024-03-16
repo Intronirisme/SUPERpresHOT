@@ -29,11 +29,6 @@ public class Character : MonoBehaviour
         _camRoot = transform.Find("CameraRoot");
         _moveComp = GetComponent<CharacterController>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        Posses();
-    }
     public void Posses()
     {
         Cursor.visible = false;
@@ -55,6 +50,7 @@ public class Character : MonoBehaviour
         UpdateLook();
         UpdateMove();
         UpdateFall();
+
         _moveComp.Move(_velocity * Time.deltaTime);
     }
 
@@ -66,7 +62,7 @@ public class Character : MonoBehaviour
         float newYaw = _viewRotation.x + _lastLookInput.x * Time.deltaTime * CameraSensitivity;
         newYaw = newYaw > 180 ? newYaw - 360 : newYaw < -180 ? newYaw + 360 : newYaw;
         _viewRotation = new Vector2(newYaw, newPitch);
-        _camRoot.transform.rotation = Quaternion.Euler(new Vector3(_viewRotation.y, _viewRotation.x, 0));
+        _camRoot.rotation = Quaternion.Euler(new Vector3(_viewRotation.y, _viewRotation.x, 0));
     }
 
     private void UpdateMove()
@@ -75,7 +71,7 @@ public class Character : MonoBehaviour
             (_isMoving ? AccelBrake.x : -AccelBrake.y),
             0, MaxWalkSpeed
         );
-        Vector2 rotatedInput = _lastMoveInput.Rotate(_camRoot.transform.rotation.eulerAngles.y);
+        Vector2 rotatedInput = _lastMoveInput.Rotate(_camRoot.rotation.eulerAngles.y);
         Debug.Log(rotatedInput);
         _velocity.z = rotatedInput.x * speed;
         _velocity.x = rotatedInput.y * speed;
