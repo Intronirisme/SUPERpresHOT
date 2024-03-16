@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class GameMaster : MonoBehaviour
@@ -8,10 +9,17 @@ public class GameMaster : MonoBehaviour
     public float AssaultDuration = 2;
     public float PreparationDelay = 30;
 
+    public UnityAction Freeze;
+    public UnityAction Unfreeze;
+
     private List<Item> _timeLayer0 = new List<Item>();
     private List<Item> _timeLayer1 = new List<Item>();
     private List<Item> _timeLayer2 = new List<Item>();
 
+    void Start()
+    {
+        
+    }
     private List<Item> GetLayer(int Layer)
     {
         switch (Layer)
@@ -79,12 +87,12 @@ public class GameMaster : MonoBehaviour
 
     private void WorldFreeze()
     {
-
+        Freeze();
     }
 
     private void WorldResume()
     {
-
+        Unfreeze();
     }
 
 }
