@@ -27,7 +27,7 @@ public class Item : MonoBehaviour
     private bool _isHeld = false;
 
     private float _remainingSnap;
-    private LayerMask _mask;
+    private Vector3 _frozenVelocity = Vector3.zero;
 
     private Rigidbody _rb;
 
@@ -35,7 +35,6 @@ public class Item : MonoBehaviour
     {
         Debug.Log("Awake");
         _rb = GetComponent<Rigidbody>();
-        _mask = LayerMask.NameToLayer("Frozen");
 
         Init();
     }
@@ -93,12 +92,14 @@ public class Item : MonoBehaviour
 
     public void Freeze()
     {
-
+        _rb.isKinematic = true;
+        gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
 
     public void Unfreeze()
     {
-         
+        _rb.isKinematic = false;
+        gameObject.layer = LayerMask.NameToLayer("Projectile");
     }
 
     private void ResumeUse()
@@ -109,5 +110,13 @@ public class Item : MonoBehaviour
     private void ResumeThrow()
     {
 
+    }
+
+    private IEnumerator FreezeCall()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        _frozenVelocity = _rb.velocity;
+        Freeze();
     }
 }
