@@ -4,15 +4,21 @@ using UnityEngine.AI;
 
 public class EnnemyBT : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private Dictionary<string, object> _globalData = new();
+    // Variable used for patrol
+    [SerializeField] List<GameObject> _waypoints = new();
+
+    private Dictionary<string, object> _blackBoard = new();
     private BTNode _root;
 
     void Start()
     {
-        _globalData["transform"] = transform;
-        _globalData["player"] = GameObject.FindWithTag("Player");
-        _globalData["navAgent"] = GetComponent<NavMeshAgent>();
+        _blackBoard["waypoints"] = _waypoints;
+        _blackBoard["currentWaypointIndex"] = 0;
+        _blackBoard["navMeshAgent"] = GetComponent<NavMeshAgent>();
+
+        _blackBoard["transform"] = transform;
+        _blackBoard["player"] = GameObject.FindWithTag("Player");
+        
         ConstructTree();
     }
 
@@ -20,7 +26,7 @@ public class EnnemyBT : MonoBehaviour
     {
         _root = new Selector(new List<BTNode>
         {
-            new Sequence(new List<BTNode> { // Enter handling part
+            /*new Sequence(new List<BTNode> { // Enter handling part
                 // HasEnter
                 // Enter
             }),
@@ -36,16 +42,16 @@ public class EnnemyBT : MonoBehaviour
             }),
 
             new Sequence(new List<BTNode> { // Attack player part
-                new IsPlayerInAttackRange(transform, ref _globalData),
+                new IsPlayerInAttackRange(transform, ref _blackBoard),
                 new AttackPlayer(transform)
             }),
 
             new Sequence(new List<BTNode> { // Movement/detection to player part
-                new IsPlayerSeen(transform,ref _globalData),
-                new MoveToPlayer(transform, ref _globalData)
+                new IsPlayerSeen(transform,ref _blackBoard),
+                new MoveToPlayer(transform, ref _blackBoard)
             }),
 
-            // Patrol task
+            new Patrolling(ref _blackBoard)
         });
     }
 

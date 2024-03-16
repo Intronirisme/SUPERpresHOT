@@ -21,7 +21,7 @@ public class TestBT : BehaviorTree
     {
         _root = new Selector(new List<BTNode> { 
             new Sequence(new List<BTNode> { //Attaque
-                new PlayerInRange(ref _blackboard, 1.5f)
+                new PlayerInRange(ref _blackboard, 1.5f),
                 //new Attack(ref _blackboard)
             }),
             new Sequence(new List<BTNode> { //Chasse
