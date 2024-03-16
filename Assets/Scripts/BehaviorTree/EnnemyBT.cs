@@ -40,9 +40,9 @@ public class EnnemyBT : MonoBehaviour
                 // AttackPlayer
             }),
 
-            new Sequence(new List<BTNode> { // Mouvement/detection to player part
-                // IsPlayerSeen
-                // MoveTowardPlayer
+            new Sequence(new List<BTNode> { // Movement/detection to player part
+                new IsPlayerSeen(transform),
+                new MoveToPlayer(transform)
             }),
 
             // Patrol task
