@@ -6,17 +6,17 @@ public class Pistol : MonoBehaviour, IInteractable
 
     public void Take()
     {
-        Debug.Log(gameObject.name + " has been taken");
+        Debug.Log(name + " has been taken");
     }
 
     public void PutDown()
     {
-        Debug.Log(gameObject.name + " has been put down");
+        Debug.Log(name + " has been put down");
     }
 
     public void Throw()
     {
-        Debug.Log(gameObject.name + " has been throwned");
+        Debug.Log(name + " has been throwned");
 
         Stop();
     }
@@ -25,17 +25,17 @@ public class Pistol : MonoBehaviour, IInteractable
     {
         if (canBeUsed)
         {
-            Debug.Log(gameObject.name + " has been used");
+            Debug.Log(name + " has been used");
         }
     }
 
     public void Play()
     {
-        Debug.Log(gameObject.name + " has been unfreezed");
+        Debug.Log(name + " has been unfreezed");
     }
 
     public void Stop()
     {
-        Debug.Log(gameObject.name + " has been freezed");
+        Debug.Log(name + " has been freezed");
     }
 }

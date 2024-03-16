@@ -39,9 +39,6 @@ public class PlayerActions : MonoBehaviour
                 {
                     intertactable.Take();
                     _itemInHand = intertactable;
-
-                    //watch which time layer the hand is so we know in which list we put the item
-                    _itemsInLayer.Add(_itemInHand);
                 }
             }
         }
@@ -64,6 +61,9 @@ public class PlayerActions : MonoBehaviour
         if (_itemInHand != null)
         {
             _itemInHand.Throw();
+            _itemsInLayer.Add(_itemInHand); //watch which time layer the hand is so we know in which list we put the item
+
+            _itemInHand = null;
         }
         else
         {
