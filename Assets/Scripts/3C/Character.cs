@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     public Vector2 LookUpLimit = new Vector2(-10, 89);
     public float MaxWalkSpeed = 3;
     public Vector2 AccelBrake = new Vector2(1.1f, 2f);
+    public float AlignSpeed = 15f;
 
     bool _isMoving = false;
     Vector3 _velocity = Vector3.zero;
@@ -22,12 +23,15 @@ public class Character : MonoBehaviour
 
     //References
     private Transform _camRoot;
+    private Transform _body;
     private CharacterController _moveComp;
 
     void Awake()
     {
         _camRoot = transform.Find("CameraRoot");
+        _body = transform.Find("Body");
         _moveComp = GetComponent<CharacterController>();
+        Posses();
     }
 
     private void Start()
@@ -57,7 +61,7 @@ public class Character : MonoBehaviour
         UpdateMove();
         UpdateFall();
 
-        _moveComp.Move(_velocity * Time.deltaTime);
+        _moveComp.SimpleMove(_velocity);
     }
 
     private void UpdateLook()
@@ -78,7 +82,6 @@ public class Character : MonoBehaviour
             0, MaxWalkSpeed
         );
         Vector2 rotatedInput = _lastMoveInput.Rotate(_camRoot.rotation.eulerAngles.y);
-        Debug.Log(rotatedInput);
         _velocity.z = rotatedInput.x * speed;
         _velocity.x = rotatedInput.y * speed;
     }
@@ -87,6 +90,16 @@ public class Character : MonoBehaviour
     {
         if (!_moveComp.isGrounded) _velocity.y -= 9.81f * Time.deltaTime;
         else if (_velocity.y < 0) _velocity.y = 0;
+    }
+
+    private void UpdateRotation()
+    {
+        float yaw = _body.rotation.eulerAngles.y;
+        float targetYaw = Mathf.Atan2(_velocity.y, _velocity.x) * Mathf.Rad2Deg;
+        float delta = targetYaw - yaw;
+        _body.rotation = Quaternion.Euler(new Vector3(0, 
+            , 0
+        ));
     }
 
     public void Move(InputAction.CallbackContext context)
