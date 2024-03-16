@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,8 +5,9 @@ using UnityEngine.AI;
 public class EnnemyBT : MonoBehaviour
 {
     // Start is called before the first frame update
-    private Dictionary<string, object> _globalData = new Dictionary<string, object>();
+    private Dictionary<string, object> _globalData = new();
     private BTNode _root;
+
     void Start()
     {
         _globalData["transform"] = transform;
@@ -20,8 +20,32 @@ public class EnnemyBT : MonoBehaviour
     {
         _root = new Selector(new List<BTNode>
         {
-            new CanSeePlayer(ref _globalData),
-            new GoToPlayer(ref _globalData)
+            new Sequence(new List<BTNode> { // Enter handling part
+                // HasEnter
+                // Enter
+            }),
+
+            new Sequence(new List<BTNode> { // Time stop handling part
+                // IsTimeStoped
+                // Frozen
+            }),
+
+            new Sequence(new List<BTNode> { // Death Handling part
+                // IsDead
+                // Die
+            }),
+
+            new Sequence(new List<BTNode> { // Attack player part
+                // IsPlayerInAttackRange
+                // AttackPlayer
+            }),
+
+            new Sequence(new List<BTNode> { // Mouvement/detection to player part
+                // IsPlayerSeen
+                // MoveTowardPlayer
+            }),
+
+            // Patrol task
         });
     }
 
