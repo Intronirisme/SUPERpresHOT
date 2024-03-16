@@ -1,7 +1,7 @@
 //using System.Collections;
 //using System.Collections.Generic;
-//using UnityEngine;
-//
+//using UnityEngine;//
+
 //public class Attack : BTNode
 //{
 //    private bool _attacking = false;
@@ -13,8 +13,8 @@
 //    public override NodeState Evaluate()
 //    {
 //        Bot bot = (Bot)GetData("botScript");
-//        if (bot == null) return NodeState.FAILURE;
-//
+//        if (bot == null) return NodeState.FAILURE;//
+
 //        if (_completedThisFrame)
 //        {
 //            _completedThisFrame = false;
@@ -29,12 +29,11 @@
 //            bot.Attack();
 //        }
 //        return NodeState.RUNNING;
-//    }
-//
+//    }//
+
 //    public void End()
 //    {
 //        //Fin de l'attaque
 //        _completedThisFrame = true;
 //    }
 //}
-//
