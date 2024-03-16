@@ -36,7 +36,12 @@ public class S_IsPlayerSeen : MonoBehaviour
             if(hit.collider.gameObject.tag == "Player")
             {
                 Debug.Log("Player in Line Of Sight");
-                MoveToPlayer(player);
+                if(Vector3.Angle(player.transform.position-transform.position, transform.forward)<=45f)
+                {
+                    Debug.Log(Vector3.Angle(player.transform.position-transform.position, transform.forward));
+                    MoveToPlayer(player);   
+                }
+                
             }
             else
             {

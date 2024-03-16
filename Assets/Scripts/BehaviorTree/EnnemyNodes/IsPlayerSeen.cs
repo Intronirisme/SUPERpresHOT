@@ -26,8 +26,11 @@ public class IsPlayerSeen : BTNode
                 {
                     if(hit.collider.gameObject.tag == "Player")
                     {
-                        _nodeState = NodeState.SUCCESS;
-                        return nodeState;
+                        if(Vector3.Angle(player.transform.position-_transform.position, _transform.forward)<=45f)
+                        {
+                            _nodeState = NodeState.SUCCESS;
+                            return nodeState;
+                        }
                     }
                 }
             }
