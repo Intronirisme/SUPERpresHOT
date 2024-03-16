@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,7 @@ public class PlayerActions : MonoBehaviour
     private bool _isAiming;
 
     private LineRenderer _lineRenderer;
+    private Transform _hand;
 
     [Header("Display line")]
     [SerializeField]
@@ -24,8 +26,9 @@ public class PlayerActions : MonoBehaviour
     [Range(0.01f, 0.25f)]
     private float _timeBetweenPoints = 0.1f;
 
-    private void Start()
+    private void Awake()
     {
+        _hand = transform.Find("Hand");
         _itemLayer = LayerMask.GetMask("Item");
 
         _lineRenderer = GetComponentInChildren<LineRenderer>();
@@ -157,17 +160,15 @@ public class PlayerActions : MonoBehaviour
         {
             Camera cam = GetComponentInChildren<Camera>();
 
-            Vector3 startPos = transform.position + cam.transform.TransformDirection(Vector3.forward) * 2f; //change to hand position
+            Vector3 startPos = _hand.position + cam.transform.TransformDirection(Vector3.forward) * 0.5f; //change to hand position
             Vector3 endPos = cam.transform.TransformDirection(Vector3.forward) * 10f;
-            Vector3 direction = Vector3.Normalize(endPos - startPos);
+            Vector3 direction = endPos - startPos;
 
             float mass = _itemInHand.GetItem().GetComponent<Rigidbody>().mass;
 
-            Debug.Log(endPos);
-
             _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
 
-            Vector3 startVelocity = _throwForce * direction / mass;
+            Vector3 startVelocity = _throwForce * cam.transform.TransformDirection(Vector3.forward) / mass;
 
             int i = 0;
             _lineRenderer.SetPosition(i, startPos);

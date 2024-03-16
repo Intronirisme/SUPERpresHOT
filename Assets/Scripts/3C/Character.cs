@@ -29,6 +29,12 @@ public class Character : MonoBehaviour
         _camRoot = transform.Find("CameraRoot");
         _moveComp = GetComponent<CharacterController>();
     }
+
+    private void Start()
+    {
+        Posses();
+    }
+
     public void Posses()
     {
         Cursor.visible = false;
