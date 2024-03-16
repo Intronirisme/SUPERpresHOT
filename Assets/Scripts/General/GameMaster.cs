@@ -59,7 +59,6 @@ public class GameMaster : MonoBehaviour
     {
         List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        Debug.Log("resume");
         foreach (Item obj in layer) obj.Unfreeze();
     }
 
@@ -99,6 +98,7 @@ public class GameMaster : MonoBehaviour
         //BigBrain
         WorldFreeze();
         _audioPlayer.Stop();
+        Debug.Log("Freeze !!!");
         yield return new WaitForSeconds(PreparationDelay);
         WorldResume();
     }
