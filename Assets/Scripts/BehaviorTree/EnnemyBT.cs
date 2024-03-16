@@ -36,8 +36,8 @@ public class EnnemyBT : MonoBehaviour
             }),
 
             new Sequence(new List<BTNode> { // Attack player part
-                // IsPlayerInAttackRange
-                // AttackPlayer
+                new IsPlayerInAttackRange(transform),
+                new AttackPlayer(transform)
             }),
 
             new Sequence(new List<BTNode> { // Mouvement/detection to player part
