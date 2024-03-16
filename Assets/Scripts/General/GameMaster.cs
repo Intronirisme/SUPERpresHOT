@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-
+[RequireComponent(typeof(AudioSource))]
 public class GameMaster : MonoBehaviour
 {
     public static GameMaster Instance { get; private set; }
@@ -18,8 +18,11 @@ public class GameMaster : MonoBehaviour
     private List<Item> _timeLayer1 = new List<Item>();
     private List<Item> _timeLayer2 = new List<Item>();
 
+    private AudioSource _audioPlayer;
+
     void Start()
     {
+        _audioPlayer = GetComponent<AudioSource>();
         if (Instance == null) Instance = this;
         else Destroy(this);
         StartCoroutine(StartSequence());
@@ -73,6 +76,7 @@ public class GameMaster : MonoBehaviour
     }
     IEnumerator StartSequence()
     {
+        _audioPlayer.Play();
         //Kalm
         yield return new WaitForSeconds(3.0f);
         //Panik
@@ -80,6 +84,7 @@ public class GameMaster : MonoBehaviour
         yield return new WaitForSeconds(AssaultDuration);
         //BigBrain
         WorldFreeze();
+        _audioPlayer.Stop();
         yield return new WaitForSeconds(PreparationDelay);
         WorldResume();
     }
