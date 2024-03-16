@@ -4,25 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
-public enum ProjectileTypes
-{
-    Null,
-    Hard,
-    Soft,
-    Cutt,
-    Burn
-}
-
-public struct FrozenObject
-{
-    public FrozenObject(IInteractable Item, bool Use)
-    {
-        Objet = Item;
-        UseOnResume = Use;
-    }
-    public IInteractable Objet;
-    public bool UseOnResume;
-}
 
 public class GameMaster : MonoBehaviour
 {
