@@ -7,6 +7,9 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class GameMaster : MonoBehaviour
 {
+    public float AssaultDuration = 2;
+    public float PreparationDelay = 30;
+
     private List<IInteractable> _timeLayer0 = new List<IInteractable>();
     private List<IInteractable> _timeLayer1 = new List<IInteractable>();
     private List<IInteractable> _timeLayer2 = new List<IInteractable>();
@@ -53,4 +56,37 @@ public class GameMaster : MonoBehaviour
         if (layer.Count == 0) return;
         foreach (IInteractable obj in layer) obj.Stop();
     }
+
+    public void StartGame()
+    {
+        StartCoroutine(StartSequence());
+    }
+    IEnumerator StartSequence()
+    {
+        //Kalm
+        yield return new WaitForSeconds(3.0f);
+        //Panik
+        StartAssault();
+        yield return new WaitForSeconds(AssaultDuration);
+        //BigBrain
+        WorldFreeze();
+        yield return new WaitForSeconds(PreparationDelay);
+        WorldResume();
+    }
+
+    private void StartAssault()
+    {
+
+    }
+
+    private void WorldFreeze()
+    {
+
+    }
+
+    private void WorldResume()
+    {
+
+    }
+
 }

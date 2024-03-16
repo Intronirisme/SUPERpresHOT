@@ -40,7 +40,7 @@ public class Character : MonoBehaviour
         _camRoot.transform.rotation = Quaternion.identity;
         Camera.main.transform.parent = _camRoot.transform;
         Camera.main.transform.position = _camRoot.transform.position;
-        Camera.main.transform.rotation = Quaternion.identity;
+        Camera.main.transform.rotation = _camRoot.transform.rotation;
     }
 
     public void UnPosses()
@@ -54,7 +54,7 @@ public class Character : MonoBehaviour
         UpdateLook();
         UpdateMove();
         UpdateFall();
-
+        UpdateRotation();
         _moveComp.SimpleMove(_velocity);
     }
 
@@ -88,11 +88,12 @@ public class Character : MonoBehaviour
 
     private void UpdateRotation()
     {
+        if (_velocity.magnitude < .01f) return;
         float yaw = _body.rotation.eulerAngles.y;
-        float targetYaw = Mathf.Atan2(_velocity.y, _velocity.x) * Mathf.Rad2Deg;
-        float delta = targetYaw - yaw;
-        _body.rotation = Quaternion.Euler(new Vector3(0, 
-            , 0
+        float targetYaw = Mathf.Atan2(_velocity.normalized.x, _velocity.normalized.z) * Mathf.Rad2Deg;
+        float delta = Mathf.Abs(targetYaw - yaw);
+        _body.rotation = Quaternion.Euler(new Vector3(0,
+            Mathf.LerpAngle(yaw, targetYaw, Mathf.Clamp01((AlignSpeed * Time.deltaTime) / delta)), 0
         ));
     }
 

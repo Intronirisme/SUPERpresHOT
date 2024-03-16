@@ -156,8 +156,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraSensitivity: 25
   LookUpLimit: {x: -89, y: 20}
-  MaxWalkSpeed: 3
-  AccelBrake: {x: 1.1, y: 2}
+  MaxWalkSpeed: 6
+  AccelBrake: {x: 4.5, y: 7}
+  AlignSpeed: 60
 --- !u!143 &177770949
 CharacterController:
   m_ObjectHideFlags: 0
