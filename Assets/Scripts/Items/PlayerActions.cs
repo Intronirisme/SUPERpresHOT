@@ -7,7 +7,7 @@ public class PlayerActions : MonoBehaviour
     private float _pickUpRange = 10f;
     public float _throwForce = 20f;
 
-    public float ThrowAngle = 20f;
+    //public float ThrowAngle = 20f;
 
     private IInteractable _itemInHand = null;
     private List<IInteractable> _itemsInLayer = new List<IInteractable>(); //add a list for each timer layer ?
@@ -16,6 +16,9 @@ public class PlayerActions : MonoBehaviour
     private bool _isAiming;
 
     private LineRenderer _lineRenderer;
+    private Transform _hand;
+    private Transform _camRoot;
+    private IInteractable _focusedItem; //TODO change this to Item type
 
     [Header("Display line")]
     [SerializeField]
@@ -24,18 +27,35 @@ public class PlayerActions : MonoBehaviour
     [Range(0.01f, 0.25f)]
     private float _timeBetweenPoints = 0.1f;
 
-    private void Start()
+    private void Awake()
     {
+        _hand = Helpers.FindInChildren(transform, "Hand");
         _itemLayer = LayerMask.GetMask("Item");
 
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         _lineRenderer.enabled = false;
-
-        ThrowAngle = ThrowAngle * Mathf.Deg2Rad;
+        _camRoot = transform.Find("CameraRoot");
     }
 
     private void Update()
     {
+        RaycastHit hit;
+
+        if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
+        {
+            if (hit.collider != null)
+            {
+                if (hit.collider.TryGetComponent(out IInteractable intertactable))
+                {
+                    _focusedItem = intertactable;
+                }
+                else
+                {
+                    _focusedItem = null;
+                }
+            }
+        }
+
         Aim();
     }
 
@@ -51,6 +71,11 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
+
+            Aim();
+        }
+        else if (context.canceled)
+        {
             UseItem();
         }
     }
@@ -65,9 +90,9 @@ public class PlayerActions : MonoBehaviour
         }
         else if (context.canceled)
         {
-            //_isAiming = false;
-            //_lineRenderer.enabled = false;
-            //ThrowItem();
+            _isAiming = false;
+            _lineRenderer.enabled = false;
+            ThrowItem();
         }
     }
 
@@ -81,27 +106,18 @@ public class PlayerActions : MonoBehaviour
 
     private void TakeItem()
     {
-        Camera cam = GetComponentInChildren<Camera>();
-        RaycastHit hit;
-
-        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
+        if (_focusedItem != null)
         {
-            if (hit.collider != null)
+            if (_itemInHand != null) //if we already have an item we first put down the item in hand
             {
-                if (hit.collider.TryGetComponent(out IInteractable intertactable))
-                {
-                    if (_itemInHand != null) //if we already have an item we first put down the item in hand
-                    {
-                        _itemInHand.PutDown();
-                        _itemInHand = null;
-                    }
-
-                    intertactable.Take();
-                    _itemInHand = intertactable;
-                }
+                _itemInHand.PutDown();
+                _itemInHand = null;
             }
+
+            _focusedItem.Take();
+            _itemInHand = _focusedItem;
         }
-        else //if we don't touch anything we put down the item
+        else
         {
             if (_itemInHand != null)
             {
@@ -155,19 +171,13 @@ public class PlayerActions : MonoBehaviour
     {
         if (_isAiming)
         {
-            Camera cam = GetComponentInChildren<Camera>();
-
-            Vector3 startPos = transform.position + cam.transform.TransformDirection(Vector3.forward) * 2f; //change to hand position
-            Vector3 endPos = cam.transform.TransformDirection(Vector3.forward) * 10f;
-            Vector3 direction = Vector3.Normalize(endPos - startPos);
+            Vector3 startPos = _hand.position + _camRoot.TransformDirection(Vector3.forward) * 0.5f; //change to hand position
 
             float mass = _itemInHand.GetItem().GetComponent<Rigidbody>().mass;
 
-            Debug.Log(endPos);
-
             _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
 
-            Vector3 startVelocity = _throwForce * direction / mass;
+            Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / mass;
 
             int i = 0;
             _lineRenderer.SetPosition(i, startPos);
@@ -179,6 +189,17 @@ public class PlayerActions : MonoBehaviour
                 point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
 
                 _lineRenderer.SetPosition(i, point);
+
+                Vector3 lastpos = _lineRenderer.GetPosition(i - 1);
+
+                RaycastHit hit;
+
+                if (Physics.Linecast(lastpos, point, out hit))
+                {
+                    _lineRenderer.SetPosition(i, hit.point);
+                    _lineRenderer.positionCount = i + 1;
+                    return;
+                }
             }
         }
     }

@@ -33,6 +33,12 @@ public class Character : MonoBehaviour
         _moveComp = GetComponent<CharacterController>();
         Posses();
     }
+
+    private void Start()
+    {
+        Posses();
+    }
+
     public void Posses()
     {
         Cursor.visible = false;
