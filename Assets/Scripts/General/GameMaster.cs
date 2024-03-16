@@ -9,6 +9,7 @@ public class GameMaster : MonoBehaviour
     public float AssaultDuration = 2;
     public float PreparationDelay = 30;
 
+    public UnityAction Attack;
     public UnityAction Freeze;
     public UnityAction Unfreeze;
 
@@ -18,7 +19,7 @@ public class GameMaster : MonoBehaviour
 
     void Start()
     {
-        
+        StartCoroutine(StartSequence());
     }
     private List<Item> GetLayer(int Layer)
     {
@@ -82,7 +83,7 @@ public class GameMaster : MonoBehaviour
 
     private void StartAssault()
     {
-
+        Attack();
     }
 
     private void WorldFreeze()
