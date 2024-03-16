@@ -44,7 +44,6 @@ public class GameMaster : MonoBehaviour
     {
         RemoveObject(Item);
         List<Item> layer = GetLayer(Layer);
-        if (layer.Count == 0) return;
         layer.Add(Item);
     }
     public void RemoveObject(Item Item)
@@ -57,6 +56,7 @@ public class GameMaster : MonoBehaviour
     {
         List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
+        Debug.Log("resume");
         foreach (Item obj in layer) obj.Unfreeze();
     }
 

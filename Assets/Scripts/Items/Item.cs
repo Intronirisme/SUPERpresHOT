@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +34,6 @@ public class Item : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Awake");
         _rb = GetComponent<Rigidbody>();
 
         Init();
@@ -88,18 +88,23 @@ public class Item : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Item");
 
         _rb.velocity = velocity;
+
+        StartCoroutine(FreezeCall());
     }
 
     public void Freeze()
     {
+        _frozenVelocity = _rb.velocity;
         _rb.isKinematic = true;
         gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
 
     public void Unfreeze()
     {
+        Debug.Log("unfreeze");
         _rb.isKinematic = false;
         gameObject.layer = LayerMask.NameToLayer("Projectile");
+        _rb.velocity = _frozenVelocity;
     }
 
     private void ResumeUse()
@@ -114,9 +119,8 @@ public class Item : MonoBehaviour
 
     private IEnumerator FreezeCall()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
-        _frozenVelocity = _rb.velocity;
         Freeze();
     }
 }

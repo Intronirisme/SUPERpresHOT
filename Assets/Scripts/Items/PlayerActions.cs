@@ -91,7 +91,6 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started && _itemInHand != null)
         {
-            Debug.Log("Aiming with item");
             _isAiming = true;
             _lineRenderer.enabled = true;
         }
@@ -140,10 +139,6 @@ public class PlayerActions : MonoBehaviour
         {
             _itemInHand.Use();
         }
-        else
-        {
-            Debug.Log("No item in hand");
-        }
     }
 
     private void ThrowItem()
@@ -153,11 +148,9 @@ public class PlayerActions : MonoBehaviour
             Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
             _itemInHand.Throw(startVelocity);
 
+            GameMaster.Instance.AddObject(_itemInHand, 0);
+
             _itemInHand = null;
-        }
-        else
-        {
-            Debug.Log("No item in hand to be thrown");
         }
     }
 
@@ -195,6 +188,14 @@ public class PlayerActions : MonoBehaviour
                     return;
                 }
             }
+        }
+    }
+
+    public void UnfreezeItems(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GameMaster.Instance.ResumeLayer(0);
         }
     }
 }
