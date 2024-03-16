@@ -14,6 +14,7 @@ public class IsTimeFrozen : BTNode
 
     public override NodeState Evaluate()
     {
-        
+        _nodeState = NodeState.FAILURE;
+        return _nodeState;
     }
 }
