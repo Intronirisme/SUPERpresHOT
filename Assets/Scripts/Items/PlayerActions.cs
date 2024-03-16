@@ -5,16 +5,38 @@ using UnityEngine.InputSystem;
 public class PlayerActions : MonoBehaviour
 {
     private float _pickUpRange = 10f;
-    private float _throwForce = 10f;
+    public float _throwForce = 20f;
+
+    public float ThrowAngle = 20f;
 
     private IInteractable _itemInHand = null;
     private List<IInteractable> _itemsInLayer = new List<IInteractable>(); //add a list for each timer layer ?
 
     private LayerMask _itemLayer;
+    private bool _isAiming;
+
+    private LineRenderer _lineRenderer;
+
+    [Header("Display line")]
+    [SerializeField]
+    private int _linePoint = 25;
+
+    [Range(0.01f, 0.25f)]
+    private float _timeBetweenPoints = 0.1f;
 
     private void Start()
     {
         _itemLayer = LayerMask.GetMask("Item");
+
+        _lineRenderer = GetComponentInChildren<LineRenderer>();
+        _lineRenderer.enabled = false;
+
+        ThrowAngle = ThrowAngle * Mathf.Deg2Rad;
+    }
+
+    private void Update()
+    {
+        Aim();
     }
 
     public void Interact(InputAction.CallbackContext context)
@@ -35,13 +57,17 @@ public class PlayerActions : MonoBehaviour
 
     public void Throw(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && _itemInHand != null)
         {
             Debug.Log("Aiming with item");
+            _isAiming = true;
+            _lineRenderer.enabled = true;
         }
         else if (context.canceled)
         {
-            ThrowItem();
+            //_isAiming = false;
+            //_lineRenderer.enabled = false;
+            //ThrowItem();
         }
     }
 
@@ -122,6 +148,38 @@ public class PlayerActions : MonoBehaviour
             }
 
             _itemsInLayer.Clear();
+        }
+    }
+
+    public void Aim()
+    {
+        if (_isAiming)
+        {
+            Camera cam = GetComponentInChildren<Camera>();
+
+            Vector3 startPos = transform.position + cam.transform.TransformDirection(Vector3.forward) * 2f; //change to hand position
+            Vector3 endPos = cam.transform.TransformDirection(Vector3.forward) * 10f;
+            Vector3 direction = Vector3.Normalize(endPos - startPos);
+
+            float mass = _itemInHand.GetItem().GetComponent<Rigidbody>().mass;
+
+            Debug.Log(endPos);
+
+            _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
+
+            Vector3 startVelocity = _throwForce * direction / mass;
+
+            int i = 0;
+            _lineRenderer.SetPosition(i, startPos);
+
+            for (float time = 0; time < _linePoint; time += _timeBetweenPoints)
+            {
+                i++;
+                Vector3 point = startPos + time * startVelocity;
+                point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+
+                _lineRenderer.SetPosition(i, point);
+            }
         }
     }
 }

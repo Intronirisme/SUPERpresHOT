@@ -42,4 +42,9 @@ public class Pistol : MonoBehaviour, IInteractable
     {
         Debug.Log(name + " has been freezed");
     }
+
+    public GameObject GetItem()
+    {
+        return gameObject;
+    }
 }
