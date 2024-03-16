@@ -6,9 +6,10 @@ public class IsPlayerInAttackRange : BTNode
 {
     private Transform _transform;
 
-    public IsPlayerInAttackRange(Transform transform)
+    public IsPlayerInAttackRange(Transform transform, ref Dictionary<string, object> data)
     {
         _transform = transform;
+        _dataContext = data;
     }
 
     public override NodeState Evaluate()
