@@ -14,10 +14,10 @@ public class MoveToPlayer : BTNode
     }
     public override NodeState Evaluate()
     {
-        NavMeshAgent navAgent = (NavMeshAgent)GetData("navAgent");
+        NavMeshAgent navMeshAgent = (NavMeshAgent)GetData("navMeshAgent");
         GameObject player = (GameObject)GetData("player");
 
-        navAgent.destination = player.transform.position;
+        navMeshAgent.destination = player.transform.position;
 
         _nodeState = NodeState.RUNNING;
         return nodeState;

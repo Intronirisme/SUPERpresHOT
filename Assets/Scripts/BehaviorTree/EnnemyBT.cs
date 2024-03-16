@@ -49,7 +49,7 @@ public class EnnemyBT : MonoBehaviour
             }),
 
             new Sequence(new List<BTNode> { // Movement/detection to player part
-                new IsPlayerSeen(transform,ref _blackBoard),
+                new IsPlayerSeen(transform, ref _blackBoard),
                 new MoveToPlayer(transform, ref _blackBoard)
             }),
 
