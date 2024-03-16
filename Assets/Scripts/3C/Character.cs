@@ -17,6 +17,7 @@ public class Character : MonoBehaviour
     bool _isMoving = false;
     Vector3 _velocity = Vector3.zero;
 
+    //Movement
     Vector2 _lastMoveInput = Vector2.zero;
     Vector2 _lastLookInput = Vector2.zero;
     Vector2 _viewRotation = Vector2.zero;
@@ -52,6 +53,12 @@ public class Character : MonoBehaviour
     public void UnPosses()
     {
         Camera.main.transform.parent = null;
+    }
+
+    public void Die()
+    {
+        UnPosses();
+        //Show Game over
     }
 
     // Update is called once per frame

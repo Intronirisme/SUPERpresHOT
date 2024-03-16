@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
+using UnityEngine.Events;
 
 
 public class GameMaster : MonoBehaviour
@@ -10,11 +9,19 @@ public class GameMaster : MonoBehaviour
     public float AssaultDuration = 2;
     public float PreparationDelay = 30;
 
-    private List<IInteractable> _timeLayer0 = new List<IInteractable>();
-    private List<IInteractable> _timeLayer1 = new List<IInteractable>();
-    private List<IInteractable> _timeLayer2 = new List<IInteractable>();
+    public UnityAction Attack;
+    public UnityAction Freeze;
+    public UnityAction Unfreeze;
 
-    private List<IInteractable> GetLayer(int Layer)
+    private List<Item> _timeLayer0 = new List<Item>();
+    private List<Item> _timeLayer1 = new List<Item>();
+    private List<Item> _timeLayer2 = new List<Item>();
+
+    void Start()
+    {
+        StartCoroutine(StartSequence());
+    }
+    private List<Item> GetLayer(int Layer)
     {
         switch (Layer)
         {
@@ -28,33 +35,33 @@ public class GameMaster : MonoBehaviour
                 return _timeLayer2;
         }
         Debug.LogError("Invalid Layer : " + Layer);
-        return new List<IInteractable>();
+        return new List<Item>();
     }
-    public void AddObject(IInteractable Object, int Layer, bool Used)
+    public void AddObject(Item Item, int Layer, bool Used)
     {
-        RemoveObject(Object);
-        List<IInteractable> layer = GetLayer(Layer);
+        RemoveObject(Item);
+        List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        layer.Add(Object);
+        layer.Add(Item);
     }
-    public void RemoveObject(IInteractable Object)
+    public void RemoveObject(Item Item)
     {
-        if (_timeLayer0.Contains(Object)) _timeLayer0.Remove(Object);
-        if (_timeLayer1.Contains(Object)) _timeLayer1.Remove(Object);
-        if (_timeLayer2.Contains(Object)) _timeLayer2.Remove(Object);
+        if (_timeLayer0.Contains(Item)) _timeLayer0.Remove(Item);
+        if (_timeLayer1.Contains(Item)) _timeLayer1.Remove(Item);
+        if (_timeLayer2.Contains(Item)) _timeLayer2.Remove(Item);
     }
     public void ResumeLayer(int Layer)
     {
-        List<IInteractable> layer = GetLayer(Layer);
+        List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        foreach (IInteractable obj in layer) obj.Play();
+        foreach (Item obj in layer) obj.Unfreeze();
     }
 
     public void FreezeLayer(int Layer)
     {
-        List<IInteractable> layer = GetLayer(Layer);
+        List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        foreach (IInteractable obj in layer) obj.Stop();
+        foreach (Item obj in layer) obj.Freeze();
     }
 
     public void StartGame()
@@ -76,17 +83,17 @@ public class GameMaster : MonoBehaviour
 
     private void StartAssault()
     {
-
+        Attack();
     }
 
     private void WorldFreeze()
     {
-
+        Freeze();
     }
 
     private void WorldResume()
     {
-
+        Unfreeze();
     }
 
 }
