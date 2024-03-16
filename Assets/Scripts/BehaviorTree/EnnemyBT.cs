@@ -26,7 +26,8 @@ public class EnnemyBT : MonoBehaviour
     {
         _root = new Selector(new List<BTNode>
         {
-            /*new Sequence(new List<BTNode> { // Enter handling part
+            /*
+            new Sequence(new List<BTNode> { // Enter handling part
                 // HasEnter
                 // Enter
             }),
@@ -40,6 +41,7 @@ public class EnnemyBT : MonoBehaviour
                 // IsDead
                 // Die
             }),
+            */
 
             new Sequence(new List<BTNode> { // Attack player part
                 new IsPlayerInAttackRange(transform, ref _blackBoard),
