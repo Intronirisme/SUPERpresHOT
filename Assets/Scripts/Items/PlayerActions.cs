@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -9,29 +10,48 @@ public class PlayerActions : MonoBehaviour
     private IInteractable _itemInHand = null;
     private List<IInteractable> _itemsInLayer = new List<IInteractable>(); //add a list for each timer layer ?
 
-    private void Update()
+    public void Interact(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (context.started)
         {
             TakeItem();
         }
-        if (Input.GetMouseButtonDown(0))
+    }
+
+    public void Use(InputAction.CallbackContext context)
+    {
+        if (context.started)
         {
             UseItem();
-            PlayItem();
         }
-        if (Input.GetMouseButtonDown(1))
+    }
+
+    public void Throw(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("Aiming with item");
+        }
+        else if (context.canceled)
         {
             ThrowItem();
         }
     }
 
+    public void TimeSwitch(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            ItemTimeSwitch();
+        }
+    }
 
     private void TakeItem()
     {
+        Camera cam = GetComponentInChildren<Camera>();
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, _pickUpRange))
+        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, _pickUpRange))
         {
             if (hit.collider != null)
             {
@@ -71,7 +91,7 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    private void PlayItem()
+    private void ItemTimeSwitch()
     {
         if (_itemsInLayer.Count > 0)
         {
