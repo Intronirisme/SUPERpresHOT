@@ -10,6 +10,13 @@ public class PlayerActions : MonoBehaviour
     private IInteractable _itemInHand = null;
     private List<IInteractable> _itemsInLayer = new List<IInteractable>(); //add a list for each timer layer ?
 
+    private LayerMask _itemLayer;
+
+    private void Start()
+    {
+        _itemLayer = LayerMask.GetMask("Item");
+    }
+
     public void Interact(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -51,15 +58,29 @@ public class PlayerActions : MonoBehaviour
         Camera cam = GetComponentInChildren<Camera>();
         RaycastHit hit;
 
-        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, _pickUpRange))
+        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
         {
             if (hit.collider != null)
             {
                 if (hit.collider.TryGetComponent(out IInteractable intertactable))
                 {
+                    if (_itemInHand != null) //if we already have an item we first put down the item in hand
+                    {
+                        _itemInHand.PutDown();
+                        _itemInHand = null;
+                    }
+
                     intertactable.Take();
                     _itemInHand = intertactable;
                 }
+            }
+        }
+        else //if we don't touch anything we put down the item
+        {
+            if (_itemInHand != null)
+            {
+                _itemInHand.PutDown();
+                _itemInHand = null;
             }
         }
     }
@@ -91,7 +112,7 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    private void ItemTimeSwitch()
+    private void ItemTimeSwitch() //time layer as an argument
     {
         if (_itemsInLayer.Count > 0)
         {

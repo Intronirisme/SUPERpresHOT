@@ -16,7 +16,7 @@ public class Pistol : MonoBehaviour, IInteractable
 
     public void Throw()
     {
-        Debug.Log(name + " has been throwned");
+        Debug.Log(name + " has been throwne");
 
         Stop();
     }
@@ -26,6 +26,10 @@ public class Pistol : MonoBehaviour, IInteractable
         if (canBeUsed)
         {
             Debug.Log(name + " has been used");
+        }
+        else
+        {
+            Debug.Log(name + " can't be used");
         }
     }
 
