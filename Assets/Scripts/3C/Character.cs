@@ -51,7 +51,7 @@ public class Character : MonoBehaviour
         UpdateMove();
         UpdateFall();
 
-        _moveComp.Move(_velocity * Time.deltaTime);
+        _moveComp.SimpleMove(_velocity);
     }
 
     private void UpdateLook()
