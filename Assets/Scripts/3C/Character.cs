@@ -14,7 +14,6 @@ public class Character : MonoBehaviour
     public Vector2 AccelBrake = new Vector2(1.1f, 2f);
 
     bool _isMoving = false;
-    Vector3 _moveDir = Vector3.zero;
     Vector3 _velocity = Vector3.zero;
 
     Vector2 _lastMoveInput = Vector2.zero;
@@ -54,9 +53,8 @@ public class Character : MonoBehaviour
     void Update()
     {
         UpdateLook();
-
-        _velocity = UpdateMove(_velocity);
-        _velocity = UpdateFall(_velocity);
+        UpdateMove();
+        UpdateFall();
         _moveComp.Move(_velocity * Time.deltaTime);
     }
 
@@ -71,29 +69,22 @@ public class Character : MonoBehaviour
         _camRoot.transform.rotation = Quaternion.Euler(new Vector3(_viewRotation.y, _viewRotation.x, 0));
     }
 
-    private Vector3 UpdateMove(Vector3 velocity)
+    private void UpdateMove()
     {
-        /*        float velocity = Mathf.Clamp(_velocity.magnitude + Time.deltaTime *
-                    (_isMoving ? AccelBrake.x : -AccelBrake.y),
-                    0, MaxWalkSpeed
-                );*/
-        //_velocity = _moveDir * velocity;
-        //Debug.Log(_velocity.magnitude);
-        //_moveComp.Move(_velocity * Time.deltaTime);
-        return velocity;
+        float speed = Mathf.Clamp(_velocity.magnitude + Time.deltaTime *
+            (_isMoving ? AccelBrake.x : -AccelBrake.y),
+            0, MaxWalkSpeed
+        );
+        Vector2 rotatedInput = _lastMoveInput.Rotate(_camRoot.transform.rotation.eulerAngles.y);
+        Debug.Log(rotatedInput);
+        _velocity.z = rotatedInput.x * speed;
+        _velocity.x = rotatedInput.y * speed;
     }
 
-    Vector3 UpdateFall(Vector3 velocity)
+    private void UpdateFall()
     {
-        if (!_moveComp.isGrounded)
-        {
-            velocity += Time.deltaTime * Vector3.down * 9.81f;
-        }
-        else if (velocity.y < 0)
-        {
-            velocity.y = 0;
-        }
-        return velocity;
+        if (!_moveComp.isGrounded) _velocity.y -= 9.81f * Time.deltaTime;
+        else if (_velocity.y < 0) _velocity.y = 0;
     }
 
     public void Move(InputAction.CallbackContext context)
