@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class GameMaster : MonoBehaviour
 {
+    public static GameMaster Instance { get; private set; }
     public float AssaultDuration = 2;
     public float PreparationDelay = 30;
 
@@ -19,6 +20,8 @@ public class GameMaster : MonoBehaviour
 
     void Start()
     {
+        if (Instance == null) Instance = this;
+        else Destroy(this);
         StartCoroutine(StartSequence());
     }
     private List<Item> GetLayer(int Layer)
@@ -37,7 +40,7 @@ public class GameMaster : MonoBehaviour
         Debug.LogError("Invalid Layer : " + Layer);
         return new List<Item>();
     }
-    public void AddObject(Item Item, int Layer, bool Used)
+    public void AddObject(Item Item, int Layer)
     {
         RemoveObject(Item);
         List<Item> layer = GetLayer(Layer);
