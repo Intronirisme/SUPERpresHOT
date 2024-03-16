@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class Attack : BTNode
 {
     private bool _attacking = false;
@@ -37,3 +37,4 @@ public class Attack : BTNode
         _completedThisFrame = true;
     }
 }
+*/

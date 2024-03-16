@@ -11,7 +11,7 @@ public class TestBT : BehaviorTree
     {
         base.InitBlackboard();
         _blackboard["navAgent"] = gameObject.GetComponent<NavMeshAgent>();
-        _blackboard["botScript"] = gameObject.GetComponent<Bot>();
+        //_blackboard["botScript"] = gameObject.GetComponent<Bot>();
         _blackboard["target"] = null;
         _blackboard["player"] = null;
         _blackboard["goal"] = null;
@@ -22,7 +22,7 @@ public class TestBT : BehaviorTree
         _root = new Selector(new List<BTNode> { 
             new Sequence(new List<BTNode> { //Attaque
                 new PlayerInRange(ref _blackboard, 1.5f),
-                new Attack(ref _blackboard)
+                //new Attack(ref _blackboard)
             }),
             new Sequence(new List<BTNode> { //Chasse
                 
