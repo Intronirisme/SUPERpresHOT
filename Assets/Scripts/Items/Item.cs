@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ProjectileTypes
 {
@@ -26,6 +28,18 @@ public class Item : MonoBehaviour
     private bool _isHeld = false;
 
     private float _remainingSnap;
+    private Vector3 _frozenVelocity = Vector3.zero;
+
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+
+        Init();
+    }
+
+    public virtual void Init() { }
 
     void Update()
     {
@@ -42,6 +56,10 @@ public class Item : MonoBehaviour
         transform.parent = AttachPoint.transform;
         _isHeld = true;
         _remainingSnap = SnapDuration;
+
+        _rb.isKinematic = true;
+
+        gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
 
     public void Drop()
@@ -49,6 +67,10 @@ public class Item : MonoBehaviour
         _isHeld = false;
         transform.parent = null;
         _remainingSnap = 0;
+
+        _rb.isKinematic = false;
+
+        gameObject.layer = LayerMask.NameToLayer("Item");
     }
 
     public void Use()
@@ -56,19 +78,33 @@ public class Item : MonoBehaviour
 
     }
 
-    public void Throw()
+    public void Throw(Vector3 velocity)
     {
+        _isHeld = false;
+        transform.parent = null;
+        _remainingSnap = 0;
 
+        _rb.isKinematic = false;
+        gameObject.layer = LayerMask.NameToLayer("Item");
+
+        _rb.velocity = velocity;
+
+        StartCoroutine(FreezeCall());
     }
 
     public void Freeze()
     {
-
+        _frozenVelocity = _rb.velocity;
+        _rb.isKinematic = true;
+        gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
 
     public void Unfreeze()
     {
-         
+        Debug.Log("unfreeze");
+        _rb.isKinematic = false;
+        gameObject.layer = LayerMask.NameToLayer("Projectile");
+        _rb.velocity = _frozenVelocity;
     }
 
     private void ResumeUse()
@@ -79,5 +115,16 @@ public class Item : MonoBehaviour
     private void ResumeThrow()
     {
 
+    }
+
+    private IEnumerator FreezeCall()
+    {
+        if (gameObject.layer == LayerMask.NameToLayer("Frozen"))
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.1f);
+
+        Freeze();
     }
 }

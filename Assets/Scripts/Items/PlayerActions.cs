@@ -9,8 +9,7 @@ public class PlayerActions : MonoBehaviour
 
     //public float ThrowAngle = 20f;
 
-    private IInteractable _itemInHand = null;
-    private List<IInteractable> _itemsInLayer = new List<IInteractable>(); //add a list for each timer layer ?
+    private Item _itemInHand = null;
 
     private LayerMask _itemLayer;
     private bool _isAiming;
@@ -18,7 +17,7 @@ public class PlayerActions : MonoBehaviour
     private LineRenderer _lineRenderer;
     private Transform _hand;
     private Transform _camRoot;
-    private IInteractable _focusedItem; //TODO change this to Item type
+    private Item _focusedItem; //TODO change this to Item type
 
     [Header("Display line")]
     [SerializeField]
@@ -45,15 +44,24 @@ public class PlayerActions : MonoBehaviour
         {
             if (hit.collider != null)
             {
-                if (hit.collider.TryGetComponent(out IInteractable intertactable))
+                if (hit.collider.TryGetComponent(out Item item))
                 {
-                    _focusedItem = intertactable;
+                    _focusedItem = item;
                 }
                 else
                 {
                     _focusedItem = null;
                 }
             }
+            else
+            {
+                _focusedItem = null;
+                Debug.Log("item unfocused");
+            }
+        }
+        else
+        {
+            _focusedItem = null;
         }
 
         Aim();
@@ -72,7 +80,6 @@ public class PlayerActions : MonoBehaviour
         if (context.started)
         {
 
-            Aim();
         }
         else if (context.canceled)
         {
@@ -84,7 +91,6 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started && _itemInHand != null)
         {
-            Debug.Log("Aiming with item");
             _isAiming = true;
             _lineRenderer.enabled = true;
         }
@@ -100,7 +106,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-            ItemTimeSwitch();
+
         }
     }
 
@@ -110,18 +116,18 @@ public class PlayerActions : MonoBehaviour
         {
             if (_itemInHand != null) //if we already have an item we first put down the item in hand
             {
-                _itemInHand.PutDown();
+                _itemInHand.Drop();
                 _itemInHand = null;
             }
 
-            _focusedItem.Take();
+            _focusedItem.Pickup(_hand.gameObject);
             _itemInHand = _focusedItem;
         }
         else
         {
             if (_itemInHand != null)
             {
-                _itemInHand.PutDown();
+                _itemInHand.Drop();
                 _itemInHand = null;
             }
         }
@@ -133,37 +139,18 @@ public class PlayerActions : MonoBehaviour
         {
             _itemInHand.Use();
         }
-        else
-        {
-            Debug.Log("No item in hand");
-        }
     }
 
     private void ThrowItem()
     {
         if (_itemInHand != null)
         {
-            _itemInHand.Throw();
-            _itemsInLayer.Add(_itemInHand); //watch which time layer the hand is so we know in which list we put the item
+            Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
+            _itemInHand.Throw(startVelocity);
+
+            GameMaster.Instance.AddObject(_itemInHand, 0);
 
             _itemInHand = null;
-        }
-        else
-        {
-            Debug.Log("No item in hand to be thrown");
-        }
-    }
-
-    private void ItemTimeSwitch() //time layer as an argument
-    {
-        if (_itemsInLayer.Count > 0)
-        {
-            foreach (var item in _itemsInLayer)
-            {
-                item.Play();
-            }
-
-            _itemsInLayer.Clear();
         }
     }
 
@@ -173,7 +160,7 @@ public class PlayerActions : MonoBehaviour
         {
             Vector3 startPos = _hand.position + _camRoot.TransformDirection(Vector3.forward) * 0.5f; //change to hand position
 
-            float mass = _itemInHand.GetItem().GetComponent<Rigidbody>().mass;
+            float mass = _itemInHand.GetComponent<Rigidbody>().mass;
 
             _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
 
@@ -201,6 +188,14 @@ public class PlayerActions : MonoBehaviour
                     return;
                 }
             }
+        }
+    }
+
+    public void UnfreezeItems(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GameMaster.Instance.ToogleLayer(0);
         }
     }
 }
