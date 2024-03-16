@@ -176,7 +176,7 @@ public class PlayerActions : MonoBehaviour
             {
                 i++;
                 Vector3 point = startPos + time * startVelocity;
-                point.y = startPos.y + startPos.y * time + (Physics.gravity.y / 2f * time * time);
+                point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
 
                 _lineRenderer.SetPosition(i, point);
             }
