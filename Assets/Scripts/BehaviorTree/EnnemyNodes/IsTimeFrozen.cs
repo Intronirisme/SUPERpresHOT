@@ -17,6 +17,7 @@ public class IsTimeFrozen : BTNode
         bool isFrozen = (bool)GetData("isFrozen");
         if (isFrozen == true)
         {
+            Debug.Log("Time is Frozen");
             _nodeState = NodeState.RUNNING;
             return _nodeState;
         }
