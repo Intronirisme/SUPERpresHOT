@@ -123,24 +123,23 @@ public class GameMaster : MonoBehaviour
         //BigBrain
         WorldFreeze();
         _audioPlayer.Stop();
-        Debug.Log("Freeze !!!");
         yield return new WaitForSeconds(PreparationDelay);
         WorldResume();
     }
 
     private void StartAssault()
     {
-        Attack();
+        if (Attack != null) Attack();
     }
 
     private void WorldFreeze()
     {
-        Freeze();
+        if (Freeze != null) Freeze();
     }
 
     private void WorldResume()
     {
-        Unfreeze();
+        if (Unfreeze != null) Unfreeze();
     }
 
 }
