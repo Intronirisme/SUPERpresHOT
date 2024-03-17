@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
+[RequireComponent(typeof(AudioSource))]
 public class Pistol : Item
 {
     public GameObject Bullet;
@@ -10,6 +9,7 @@ public class Pistol : Item
     private Camera _cam;
 
     private float _recoilForce = 30f;
+    private AudioSource _audioSource;
 
     public int NbBullet = 3;
 
@@ -20,6 +20,7 @@ public class Pistol : Item
         _nuzzle = transform.Find("Nuzzle");
         _cam = Camera.main;
         ProjectileType = ProjectileTypes.Hard;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public override void Use(int layer)
@@ -55,10 +56,11 @@ public class Pistol : Item
                 Throw(velocity, layer);
                 NbBullet--;
             }
+            //PAN PAN !!!
         }
         else
         {
-            //play clic sound ?
+            _audioSource.Play();
         }
 
         Debug.Log(NbBullet);
