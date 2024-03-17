@@ -5042,6 +5042,7 @@ GameObject:
   - component: {fileID: 4582758707361543327}
   - component: {fileID: 7148238099268099803}
   - component: {fileID: 5940432228065778046}
+  - component: {fileID: 42666813761210318}
   m_Layer: 0
   m_Name: DoorMesh
   m_TagString: Untagged
@@ -5114,3 +5115,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &42666813761210318
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4734759062135608155}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.65851307, y: 0.3157925, z: 0.020000009}
+  m_Center: {x: 0.026206248, y: -0.111902155, z: 0}
