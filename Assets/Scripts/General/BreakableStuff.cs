@@ -22,7 +22,7 @@ public class BreakableStuff : MonoBehaviour
     void OnBreak()
     {
         _audio.Play();
-        _mesh.SetActive(false);
+        Destroy(_mesh);
         _vfx.SetActive(true);
     }
 }
