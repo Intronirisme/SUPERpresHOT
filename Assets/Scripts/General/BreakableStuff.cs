@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(MeshRenderer))]
 public class BreakableStuff : MonoBehaviour
 {
     private AudioSource _audio;
-    private MeshRenderer _mesh;
+    private GameObject _mesh;
+    private GameObject _vfx;
     // Start is called before the first frame update
     void Start()
     {
         GameMaster.Instance.Attack += OnBreak;
         _audio = GetComponent<AudioSource>();
         _audio.Stop();
-        _mesh = GetComponent<MeshRenderer>();
+        _mesh = transform.GetChild(0).gameObject;
+        _vfx = transform.GetChild(1).gameObject;
+        _vfx.SetActive(false);
     }
 
     void OnBreak()
     {
         _audio.Play();
-        _mesh.enabled = false;
+        _mesh.SetActive(false);
+        _vfx.SetActive(true);
     }
 }
