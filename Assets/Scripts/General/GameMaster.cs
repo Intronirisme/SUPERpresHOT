@@ -128,6 +128,8 @@ public class GameMaster : MonoBehaviour
         _audioPlayer.Stop();
         yield return new WaitForSeconds(PreparationDelay);
         WorldResume();
+        _audioPlayer.Play();
+
     }
 
     private void StartAssault()
