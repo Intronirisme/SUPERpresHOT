@@ -59,27 +59,52 @@ public class GameMaster : MonoBehaviour
     {
         List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        foreach (Item obj in layer) obj.Unfreeze();
+        foreach (Item obj in layer)
+        {
+            if (obj.gameObject.layer == LayerMask.NameToLayer("Frozen"))
+            {
+                obj.Unfreeze();
+            }
+        }
     }
 
     public void FreezeLayer(int Layer)
     {
         List<Item> layer = GetLayer(Layer);
         if (layer.Count == 0) return;
-        foreach (Item obj in layer) obj.Freeze();
+        foreach (Item obj in layer)
+        {
+            if (obj.gameObject.layer != LayerMask.NameToLayer("Frozen"))
+            {
+                obj.Freeze();
+            }
+        }
     }
 
     public void ToogleLayer(int Layer)
     {
         List<Item> layer = GetLayer(Layer);
+        Debug.Log(layer.Count);
         if (layer.Count == 0) return;
-        if (layer[0].gameObject.layer == LayerMask.NameToLayer("Frozen"))
+        //if (layer[0].gameObject.layer == LayerMask.NameToLayer("Frozen"))
+        //{
+        //    ResumeLayer(Layer);
+        //}
+        //else
+        //{
+        //    FreezeLayer(Layer); //Will freeze an already frozen object, it will lose its velocity !
+        //}
+        foreach(Item obj in layer)
         {
-            ResumeLayer(Layer);
-        }
-        else
-        {
-            FreezeLayer(Layer);
+            Debug.Log(obj.gameObject.layer);
+            if (obj.gameObject.layer != LayerMask.NameToLayer("Frozen"))
+            {
+                obj.Freeze();
+            }
+            else
+            {
+                obj.Unfreeze();
+            }
         }
     }
 

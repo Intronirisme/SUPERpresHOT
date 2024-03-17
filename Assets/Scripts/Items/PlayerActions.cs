@@ -39,7 +39,7 @@ public class PlayerActions : MonoBehaviour
     private void Update()
     {
         RaycastHit hit;
-
+        //Should we also add the projectile layer ?
         if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
         {
             if (hit.collider != null)
@@ -158,7 +158,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (_isAiming)
         {
-            Vector3 startPos = _hand.position + _camRoot.TransformDirection(Vector3.forward) * 0.5f; //change to hand position
+            Vector3 startPos = _hand.position + _camRoot.TransformDirection(Vector3.forward) * 0.5f;
 
             float mass = _itemInHand.GetComponent<Rigidbody>().mass;
 
@@ -191,7 +191,7 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    public void UnfreezeItems(InputAction.CallbackContext context)
+    public void ToggleItemFreeze(InputAction.CallbackContext context)
     {
         if (context.started)
         {

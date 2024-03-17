@@ -49,6 +49,13 @@ public class Item : MonoBehaviour
             transform.position = Vector3.Lerp(transform.parent.position, transform.position, _remainingSnap/SnapDuration);
             transform.rotation = Quaternion.Slerp(transform.parent.rotation, transform.rotation, _remainingSnap/SnapDuration);
         }
+
+        //The player will be able to pick up the item again and change it's layer if needed
+        if (gameObject.layer == LayerMask.NameToLayer("Projectile") && _rb.velocity.magnitude <= Mathf.Epsilon)
+        {
+            gameObject.layer = LayerMask.NameToLayer("Item");
+            GameMaster.Instance.RemoveObject(this);
+        }
     }
 
     public void Pickup(GameObject AttachPoint)
@@ -94,7 +101,7 @@ public class Item : MonoBehaviour
 
     public void Freeze()
     {
-        _frozenVelocity = _rb.velocity;
+        _frozenVelocity = _rb.velocity; //If you freeze an iteam already frozen it will have a velocity of 0
         _rb.isKinematic = true;
         gameObject.layer = LayerMask.NameToLayer("Frozen");
     }
