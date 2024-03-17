@@ -7,11 +7,14 @@ public class PlayerActions : MonoBehaviour
     private float _pickUpRange = 10f;
     public float _throwForce = 20f;
 
+    private int _currentLayer = 0;
+
     //public float ThrowAngle = 20f;
 
     private Item _itemInHand = null;
 
     private LayerMask _itemLayer;
+    private LayerMask _frozenLayer;
     private bool _isAiming;
 
     private LineRenderer _lineRenderer;
@@ -22,7 +25,6 @@ public class PlayerActions : MonoBehaviour
     [Header("Display line")]
     [SerializeField]
     private int _linePoint = 25;
-
     [Range(0.01f, 0.25f)]
     private float _timeBetweenPoints = 0.1f;
 
@@ -30,6 +32,7 @@ public class PlayerActions : MonoBehaviour
     {
         _hand = Helpers.FindInChildren(transform, "Hand");
         _itemLayer = LayerMask.GetMask("Item");
+        _frozenLayer = LayerMask.GetMask("Frozen");
 
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         _lineRenderer.enabled = false;
@@ -40,7 +43,7 @@ public class PlayerActions : MonoBehaviour
     {
         RaycastHit hit;
         //Should we also add the projectile layer ?
-        if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
+        if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer | _frozenLayer)) //we check if there is an item in the ray
         {
             if (hit.collider != null)
             {
@@ -79,10 +82,6 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-
-        }
-        else if (context.canceled)
-        {
             UseItem();
         }
     }
@@ -106,7 +105,8 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-
+            _currentLayer = ++_currentLayer > 2 ? 0 : _currentLayer;
+            Debug.Log(_currentLayer);
         }
     }
 
@@ -122,6 +122,7 @@ public class PlayerActions : MonoBehaviour
 
             _focusedItem.Pickup(_hand.gameObject);
             _itemInHand = _focusedItem;
+            GameMaster.Instance.RemoveObject(_itemInHand);
         }
         else
         {
@@ -137,7 +138,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (_itemInHand != null)
         {
-            _itemInHand.Use();
+            _itemInHand.Use(_currentLayer);
         }
     }
 
@@ -146,9 +147,8 @@ public class PlayerActions : MonoBehaviour
         if (_itemInHand != null)
         {
             Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
-            _itemInHand.Throw(startVelocity);
 
-            GameMaster.Instance.AddObject(_itemInHand, 0);
+            _itemInHand.Throw(startVelocity, _currentLayer);
 
             _itemInHand = null;
         }
@@ -195,7 +195,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-            GameMaster.Instance.ToogleLayer(0);
+            GameMaster.Instance.ToogleLayer(_currentLayer);
         }
     }
 }

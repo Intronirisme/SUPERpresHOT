@@ -20,11 +20,14 @@ public class GameMaster : MonoBehaviour
 
     private AudioSource _audioPlayer;
 
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(this);
+    }
     void Start()
     {
         _audioPlayer = GetComponent<AudioSource>();
-        if (Instance == null) Instance = this;
-        else Destroy(this);
         StartCoroutine(StartSequence());
     }
     private List<Item> GetLayer(int Layer)
@@ -84,7 +87,7 @@ public class GameMaster : MonoBehaviour
     public void ToogleLayer(int Layer)
     {
         List<Item> layer = GetLayer(Layer);
-        Debug.Log(layer.Count);
+
         if (layer.Count == 0) return;
         //if (layer[0].gameObject.layer == LayerMask.NameToLayer("Frozen"))
         //{

@@ -207,7 +207,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5878176447850629031}
         m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
-        m_MethodName: UnfreezeItems
+        m_MethodName: ToggleItemFreeze
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
