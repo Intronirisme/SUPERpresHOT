@@ -16601,7 +16601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AssaultDuration: 2
-  PreparationDelay: 10
+  PreparationDelay: 30
 --- !u!82 &2127634348
 AudioSource:
   m_ObjectHideFlags: 0
