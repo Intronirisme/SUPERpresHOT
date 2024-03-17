@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class PlayerActions : MonoBehaviour
     [Range(0.01f, 0.25f)]
     private float _timeBetweenPoints = 0.1f;
 
+    public Image _crossHair;
+
     private void Awake()
     {
         _hand = Helpers.FindInChildren(transform, "Hand");
@@ -37,6 +40,8 @@ public class PlayerActions : MonoBehaviour
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         _lineRenderer.enabled = false;
         _camRoot = transform.Find("CameraRoot");
+
+        _crossHair.color = Color.red;
     }
 
     private void Update()
@@ -106,6 +111,15 @@ public class PlayerActions : MonoBehaviour
         if (context.started)
         {
             _currentLayer = ++_currentLayer > 2 ? 0 : _currentLayer;
+
+            switch(_currentLayer)
+            {
+                case 0: _crossHair.color = Color.red; break;
+                case 1: _crossHair.color = Color.green; break;
+                case 2: _crossHair.color = Color.blue; break;
+                default: _crossHair.color = Color.white; break;
+            }
+
             Debug.Log(_currentLayer);
         }
     }
