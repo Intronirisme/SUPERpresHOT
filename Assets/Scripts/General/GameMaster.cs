@@ -20,7 +20,7 @@ public class GameMaster : MonoBehaviour
 
     private AudioSource _audioPlayer;
 
-    void Start()
+    void Awake()
     {
         _audioPlayer = GetComponent<AudioSource>();
         if (Instance == null) Instance = this;
@@ -117,5 +117,4 @@ public class GameMaster : MonoBehaviour
     {
         Unfreeze();
     }
-
 }

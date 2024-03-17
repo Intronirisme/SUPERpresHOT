@@ -14,7 +14,6 @@ public class AttackPlayer : BTNode
     public override NodeState Evaluate()
     {
         // A compléter
-        Debug.Log("Attacked Player !");
         _nodeState = NodeState.RUNNING;
         return nodeState;
     }

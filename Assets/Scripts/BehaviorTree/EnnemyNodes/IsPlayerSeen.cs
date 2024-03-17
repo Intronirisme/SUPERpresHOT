@@ -19,13 +19,15 @@ public class IsPlayerSeen : BTNode
         
         Collider[] colliders = Physics.OverlapSphere(_transform.position, 5f);
 
+        // Check if there is player in range (all around him)
         foreach(Collider collider in colliders)
         {
-            if (collider.gameObject.tag == "Player")
+            if (collider.gameObject.CompareTag("Player"))
             {
-                if(Physics.Raycast(_transform.position, (player.transform.position - _transform.position), out hit))
+                // Check if the player is in field of view
+                if (Physics.Raycast(_transform.position, (player.transform.position - _transform.position), out hit))
                 {
-                    if(hit.collider.gameObject.tag == "Player")
+                    if (hit.collider.gameObject.CompareTag("Player"))
                     {
                         if(Vector3.Angle(player.transform.position-_transform.position, _transform.forward)<=45f)
                         {

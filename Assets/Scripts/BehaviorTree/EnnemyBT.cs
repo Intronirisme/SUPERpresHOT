@@ -19,7 +19,10 @@ public class EnnemyBT : MonoBehaviour
         _blackBoard["transform"] = transform;
         _blackBoard["player"] = GameObject.FindWithTag("Player");
 
-        _blackBoard["isFrozen"] = false;
+        _blackBoard["hasAlreadyEnter"] = false;
+        GameMaster.Instance.Attack += OnAttack;
+
+        _blackBoard["isFrozen"] = true;
         GameMaster.Instance.Freeze += OnFreeze;
         GameMaster.Instance.Unfreeze += OnUnfreeze;
 
@@ -35,6 +38,14 @@ public class EnnemyBT : MonoBehaviour
     {
         _blackBoard["isFrozen"] = false;
     }
+
+    void OnAttack()
+    {
+        _blackBoard["isFrozen"] = false;
+        _blackBoard["hasAlreadyEnter"] = false;
+    }
+
+
     void ConstructTree()
     {
         _root = new Selector(new List<BTNode>
@@ -51,7 +62,7 @@ public class EnnemyBT : MonoBehaviour
             }),
             
 
-        new Sequence(new List<BTNode> { // Attack player part
+            new Sequence(new List<BTNode> { // Attack player part
                 new IsPlayerInAttackRange(transform, ref _blackBoard),
                 new AttackPlayer(transform)
             }),
