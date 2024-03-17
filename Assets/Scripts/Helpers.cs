@@ -28,4 +28,10 @@ public static class Helpers
         }
         return null;
     }
+
+    public static bool LayerContain(int BaseMask, string LayerName)
+    {
+        int checkingMask = LayerMask.NameToLayer(LayerName);
+        return (BaseMask & checkingMask) != 0;
+    }
 }
