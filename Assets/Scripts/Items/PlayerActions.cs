@@ -12,6 +12,7 @@ public class PlayerActions : MonoBehaviour
     private Item _itemInHand = null;
 
     private LayerMask _itemLayer;
+    private LayerMask _frozenLayer;
     private bool _isAiming;
 
     private LineRenderer _lineRenderer;
@@ -22,7 +23,6 @@ public class PlayerActions : MonoBehaviour
     [Header("Display line")]
     [SerializeField]
     private int _linePoint = 25;
-
     [Range(0.01f, 0.25f)]
     private float _timeBetweenPoints = 0.1f;
 
@@ -30,6 +30,7 @@ public class PlayerActions : MonoBehaviour
     {
         _hand = Helpers.FindInChildren(transform, "Hand");
         _itemLayer = LayerMask.GetMask("Item");
+        _frozenLayer = LayerMask.GetMask("Frozen");
 
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         _lineRenderer.enabled = false;
@@ -40,7 +41,7 @@ public class PlayerActions : MonoBehaviour
     {
         RaycastHit hit;
         //Should we also add the projectile layer ?
-        if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer)) //we check if there is an item in the ray
+        if (Physics.Raycast(_camRoot.position, _camRoot.TransformDirection(Vector3.forward), out hit, _pickUpRange, _itemLayer | _frozenLayer)) //we check if there is an item in the ray
         {
             if (hit.collider != null)
             {
@@ -122,6 +123,7 @@ public class PlayerActions : MonoBehaviour
 
             _focusedItem.Pickup(_hand.gameObject);
             _itemInHand = _focusedItem;
+            GameMaster.Instance.RemoveObject(_itemInHand);
         }
         else
         {
@@ -146,9 +148,8 @@ public class PlayerActions : MonoBehaviour
         if (_itemInHand != null)
         {
             Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
-            _itemInHand.Throw(startVelocity);
 
-            GameMaster.Instance.AddObject(_itemInHand, 0);
+            _itemInHand.Throw(startVelocity, 0);
 
             _itemInHand = null;
         }

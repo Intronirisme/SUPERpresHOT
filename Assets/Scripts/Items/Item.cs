@@ -14,6 +14,7 @@ public enum ProjectileTypes
 }
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(LineRenderer))]
 public class Item : MonoBehaviour
 {
     [Header("Interactions")]
@@ -26,15 +27,26 @@ public class Item : MonoBehaviour
     public bool CanThrow { get { return PlayerCanThrow; } }
 
     private bool _isHeld = false;
+    private bool _isAiming = false;
 
     private float _remainingSnap;
     private Vector3 _frozenVelocity = Vector3.zero;
 
     private Rigidbody _rb;
+    private LineRenderer _lineRenderer;
+
+    [Header("Display line")]
+    [SerializeField]
+    private int _linePoint = 25;
+    [Range(0.01f, 0.25f)]
+    private float _timeBetweenPoints = 0.1f;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _lineRenderer = GetComponent<LineRenderer>();
+
+        _lineRenderer.enabled = false;
 
         Init();
     }
@@ -56,6 +68,8 @@ public class Item : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Item");
             GameMaster.Instance.RemoveObject(this);
         }
+
+        Aim();
     }
 
     public void Pickup(GameObject AttachPoint)
@@ -67,6 +81,12 @@ public class Item : MonoBehaviour
         _rb.isKinematic = true;
 
         gameObject.layer = LayerMask.NameToLayer("Frozen");
+
+        if (_isAiming)
+        {
+            _isAiming = false;
+            _lineRenderer.enabled = false;
+        }
     }
 
     public void Drop()
@@ -85,7 +105,7 @@ public class Item : MonoBehaviour
 
     }
 
-    public void Throw(Vector3 velocity)
+    public void Throw(Vector3 velocity, int layer)
     {
         _isHeld = false;
         transform.parent = null;
@@ -96,7 +116,7 @@ public class Item : MonoBehaviour
 
         _rb.velocity = velocity;
 
-        StartCoroutine(FreezeCall());
+        StartCoroutine(FreezeCall(layer));
     }
 
     public void Freeze()
@@ -104,6 +124,9 @@ public class Item : MonoBehaviour
         _frozenVelocity = _rb.velocity; //If you freeze an iteam already frozen it will have a velocity of 0
         _rb.isKinematic = true;
         gameObject.layer = LayerMask.NameToLayer("Frozen");
+
+        _isAiming = true;
+        _lineRenderer.enabled = true;
     }
 
     public void Unfreeze()
@@ -112,26 +135,58 @@ public class Item : MonoBehaviour
         _rb.isKinematic = false;
         gameObject.layer = LayerMask.NameToLayer("Projectile");
         _rb.velocity = _frozenVelocity;
+
+        _isAiming = false;
+        _lineRenderer.enabled = false;
     }
 
-    private void ResumeUse()
+    private IEnumerator FreezeCall(int layer)
     {
+        yield return new WaitForSeconds(0.1f);
 
-    }
-
-    private void ResumeThrow()
-    {
-
-    }
-
-    private IEnumerator FreezeCall()
-    {
         if (gameObject.layer == LayerMask.NameToLayer("Frozen"))
         {
             yield return null;
         }
-        yield return new WaitForSeconds(0.1f);
+        GameMaster.Instance.AddObject(this, layer);
 
         Freeze();
+    }
+
+    public void Aim()
+    {
+        if (_isAiming)
+        {
+            Vector3 startPos = transform.position + transform.TransformDirection(Vector3.forward) * 0.5f;
+
+            float mass = _rb.mass;
+
+            _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
+
+            Vector3 startVelocity = _frozenVelocity;
+
+            int i = 0;
+            _lineRenderer.SetPosition(i, startPos);
+
+            for (float time = 0; time < _linePoint; time += _timeBetweenPoints)
+            {
+                i++;
+                Vector3 point = startPos + time * startVelocity;
+                point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+
+                _lineRenderer.SetPosition(i, point);
+
+                Vector3 lastpos = _lineRenderer.GetPosition(i - 1);
+
+                RaycastHit hit;
+
+                if (Physics.Linecast(lastpos, point, out hit))
+                {
+                    _lineRenderer.SetPosition(i, hit.point);
+                    _lineRenderer.positionCount = i + 1;
+                    return;
+                }
+            }
+        }
     }
 }
