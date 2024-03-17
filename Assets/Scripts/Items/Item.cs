@@ -109,7 +109,7 @@ public class Item : MonoBehaviour
         _remainingSnap = 0;
 
         _rb.isKinematic = false;
-        gameObject.layer = LayerMask.NameToLayer("Item");
+        gameObject.layer = LayerMask.NameToLayer("Frozen");
 
         _rb.velocity = velocity;
 
