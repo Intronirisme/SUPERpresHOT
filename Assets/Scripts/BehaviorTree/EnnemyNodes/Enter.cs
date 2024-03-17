@@ -11,7 +11,7 @@ public class Enter : BTNode
     Transform _trajectoryStartWaypointTransform;
     Transform _trajectoryEndWaypointTransform;
 
-    float _arrivalDistance = 0.5f; // Room to manoeuvre value
+    float _arrivalDistance = 1f; // Room to manoeuvre value
 
     float _movingSpeed;
 

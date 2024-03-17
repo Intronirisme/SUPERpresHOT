@@ -45,23 +45,16 @@ public class EnnemyBT : MonoBehaviour
         _blackBoard["hasAlreadyEnter"] = false;
     }
 
-
     void ConstructTree()
     {
         _root = new Selector(new List<BTNode>
         {
             new Enter(ref _blackBoard),
-            /*
-            new Sequence(new List<BTNode> { // Death Handling part
-                // IsDead
-                // Die
-            }),
-            */
+
             new Sequence(new List<BTNode> { // Time stop handling part
                 new IsTimeFrozen(transform, ref _blackBoard)
             }),
             
-
             new Sequence(new List<BTNode> { // Attack player part
                 new IsPlayerInAttackRange(transform, ref _blackBoard),
                 new AttackPlayer(transform)

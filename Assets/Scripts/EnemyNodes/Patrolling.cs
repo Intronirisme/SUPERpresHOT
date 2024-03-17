@@ -28,6 +28,8 @@ public class Patrolling : BTNode
         {
             if (_isFirstTimeEvaluating)
             {
+                _isFirstTimeEvaluating = false;
+
                 // Find the closest waypoint only the first time we come in the evaluate function
                 float smallestDistance = Mathf.Infinity;
 
@@ -40,16 +42,14 @@ public class Patrolling : BTNode
                         _currentWaypointIndex = i;
                     }
                 }
-
-                _isFirstTimeEvaluating = false;
             }
-
-            GameObject currentWaypoint = _waypoints[_currentWaypointIndex];
-            _navMeshAgent.SetDestination(currentWaypoint.transform.position);
 
             // Check if we are still going to a waypoint
             if (_navMeshAgent.pathPending || _navMeshAgent.hasPath)
                 return NodeState.RUNNING;
+
+            GameObject currentWaypoint = _waypoints[_currentWaypointIndex];
+            _navMeshAgent.SetDestination(currentWaypoint.transform.position);
 
             // Check if the past is inferior to 1 second
             if (Time.time - _lastMoveTime < 1f)
