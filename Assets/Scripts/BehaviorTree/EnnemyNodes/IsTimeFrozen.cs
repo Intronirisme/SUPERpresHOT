@@ -20,7 +20,7 @@ public class IsTimeFrozen : BTNode
             _nodeState = NodeState.RUNNING;
             return _nodeState;
         }
-        _nodeState = NodeState.SUCCESS;
+        _nodeState = NodeState.FAILURE;
         return _nodeState;
     }
 

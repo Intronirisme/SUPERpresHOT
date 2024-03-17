@@ -20,10 +20,21 @@ public class EnnemyBT : MonoBehaviour
         _blackBoard["player"] = GameObject.FindWithTag("Player");
 
         _blackBoard["isFrozen"] = false;
-        
+        GameMaster.Instance.Freeze += OnFreeze;
+        GameMaster.Instance.Unfreeze += OnUnfreeze;
+
         ConstructTree();
     }
 
+    void OnFreeze()
+    {
+        _blackBoard["isFrozen"] = true;
+    }
+
+    void OnUnfreeze()
+    {
+        _blackBoard["isFrozen"] = false;
+    }
     void ConstructTree()
     {
         _root = new Selector(new List<BTNode>
