@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum ProjectileTypes
 {
@@ -32,7 +29,7 @@ public class Item : MonoBehaviour
     private float _remainingSnap;
     private Vector3 _frozenVelocity = Vector3.zero;
 
-    private Rigidbody _rb;
+    protected Rigidbody _rb;
     private LineRenderer _lineRenderer;
     private Color _lineColor;
 
@@ -71,6 +68,8 @@ public class Item : MonoBehaviour
         }
 
         Aim();
+
+        ItemLifeTime(); //to destroy projectile if they're in the void
     }
 
     public void Pickup(GameObject AttachPoint)
@@ -101,10 +100,7 @@ public class Item : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Item");
     }
 
-    public void Use()
-    {
-
-    }
+    public virtual void Use(int layer) { }
 
     public void Throw(Vector3 velocity, int layer)
     {
@@ -117,7 +113,7 @@ public class Item : MonoBehaviour
 
         _rb.velocity = velocity;
 
-        StartCoroutine(FreezeCall(layer));
+        StartCoroutine(FreezeCall(layer, 0.1f));
     }
 
     public void Freeze()
@@ -141,9 +137,9 @@ public class Item : MonoBehaviour
         _lineRenderer.enabled = false;
     }
 
-    private IEnumerator FreezeCall(int layer)
+    public IEnumerator FreezeCall(int layer, float timer)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(timer);
 
         if (gameObject.layer == LayerMask.NameToLayer("Frozen"))
         {
@@ -181,7 +177,16 @@ public class Item : MonoBehaviour
             {
                 i++;
                 Vector3 point = startPos + time * startVelocity;
-                point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+
+                if (_rb.useGravity)
+                {
+                    point.y = startPos.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+                }
+                else
+                {
+                    point.y = startPos.y + startVelocity.y * time + (2f * time * time);
+                }
+
 
                 _lineRenderer.SetPosition(i, point);
 
@@ -198,4 +203,6 @@ public class Item : MonoBehaviour
             }
         }
     }
+
+    public virtual void ItemLifeTime() { }
 }

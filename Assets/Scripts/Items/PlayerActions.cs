@@ -82,10 +82,6 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-
-        }
-        else if (context.canceled)
-        {
             UseItem();
         }
     }
@@ -142,7 +138,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (_itemInHand != null)
         {
-            _itemInHand.Use();
+            _itemInHand.Use(_currentLayer);
         }
     }
 
