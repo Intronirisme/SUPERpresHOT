@@ -84,7 +84,7 @@ public class GameMaster : MonoBehaviour
     public void ToogleLayer(int Layer)
     {
         List<Item> layer = GetLayer(Layer);
-        Debug.Log(layer.Count);
+
         if (layer.Count == 0) return;
         //if (layer[0].gameObject.layer == LayerMask.NameToLayer("Frozen"))
         //{

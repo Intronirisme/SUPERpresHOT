@@ -7,6 +7,8 @@ public class PlayerActions : MonoBehaviour
     private float _pickUpRange = 10f;
     public float _throwForce = 20f;
 
+    private int _currentLayer = 0;
+
     //public float ThrowAngle = 20f;
 
     private Item _itemInHand = null;
@@ -107,7 +109,8 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-
+            _currentLayer = ++_currentLayer > 2 ? 0 : _currentLayer;
+            Debug.Log(_currentLayer);
         }
     }
 
@@ -149,7 +152,7 @@ public class PlayerActions : MonoBehaviour
         {
             Vector3 startVelocity = _throwForce * _camRoot.TransformDirection(Vector3.forward) / _itemInHand.GetComponent<Rigidbody>().mass;
 
-            _itemInHand.Throw(startVelocity, 0);
+            _itemInHand.Throw(startVelocity, _currentLayer);
 
             _itemInHand = null;
         }
@@ -196,7 +199,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.started)
         {
-            GameMaster.Instance.ToogleLayer(0);
+            GameMaster.Instance.ToogleLayer(_currentLayer);
         }
     }
 }

@@ -34,6 +34,7 @@ public class Item : MonoBehaviour
 
     private Rigidbody _rb;
     private LineRenderer _lineRenderer;
+    private Color _lineColor;
 
     [Header("Display line")]
     [SerializeField]
@@ -149,6 +150,16 @@ public class Item : MonoBehaviour
             yield return null;
         }
         GameMaster.Instance.AddObject(this, layer);
+        
+        switch (layer)
+        {
+            case 0: _lineColor = new Color(1f, 0f, 0f, 0.7f); break;
+            case 1: _lineColor = new Color(0f, 1f, 0f, 0.7f); break;
+            case 2: _lineColor = new Color(0f, 0f, 1f, 0.7f); break;
+            default: _lineColor = Color.white; break;
+        }
+
+        _lineRenderer.startColor = _lineColor;
 
         Freeze();
     }
@@ -158,8 +169,6 @@ public class Item : MonoBehaviour
         if (_isAiming)
         {
             Vector3 startPos = transform.position + transform.TransformDirection(Vector3.forward) * 0.5f;
-
-            float mass = _rb.mass;
 
             _lineRenderer.positionCount = Mathf.CeilToInt(_linePoint / _timeBetweenPoints) + 1;
 
