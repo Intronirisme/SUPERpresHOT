@@ -15,4 +15,6 @@ public interface IInteractable
 
     //stop the item's time
     public void Stop();
+
+    public GameObject GetItem();
 }
